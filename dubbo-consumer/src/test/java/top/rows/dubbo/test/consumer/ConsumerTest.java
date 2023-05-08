@@ -1,6 +1,8 @@
 package top.rows.dubbo.test.consumer;
 
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONB;
+import com.alibaba.fastjson2.JSONReader;
 import org.apache.dubbo.config.ReferenceConfig;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.utils.SimpleReferenceCache;
@@ -16,7 +18,9 @@ import top.rows.dubbo.test.api.model.ActivityParam;
 import top.rows.dubbo.test.api.model.ActivityResp;
 import top.rows.dubbo.test.api.model.ShopProductSkuKey;
 
+import java.util.Base64;
 import java.util.Map;
+import java.util.Objects;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -29,21 +33,6 @@ public class ConsumerTest {
     @Autowired
     private DubboConfigurationProperties dubboConfigurationProperties;
 
-    public GenericService genericService(String interfaceName) {
-        SimpleReferenceCache cache = SimpleReferenceCache.getCache();
-        GenericService genericService = cache.get(interfaceName);
-        if (genericService != null) {
-            return genericService;
-        }
-        ReferenceConfig<GenericService> referenceConfig = new ReferenceConfig<>();
-        referenceConfig.setId(interfaceName);
-        referenceConfig.setInterface(interfaceName);
-        referenceConfig.setConsumer(dubboConfigurationProperties.getConsumer());
-        referenceConfig.setTimeout(dubboConfigurationProperties.getConsumer().getTimeout());
-        referenceConfig.setGeneric(GENERIC);
-        referenceConfig.setAsync(Boolean.FALSE);
-        return cache.get(referenceConfig);
-    }
 
     private ActivityParam param() {
         return new ActivityParam()
@@ -79,5 +68,21 @@ public class ConsumerTest {
                 new Object[]{param()}
         );
         System.out.println("success");
+    }
+
+    public GenericService genericService(String interfaceName) {
+        SimpleReferenceCache cache = SimpleReferenceCache.getCache();
+        GenericService genericService = cache.get(interfaceName);
+        if (genericService != null) {
+            return genericService;
+        }
+        ReferenceConfig<GenericService> referenceConfig = new ReferenceConfig<>();
+        referenceConfig.setId(interfaceName);
+        referenceConfig.setInterface(interfaceName);
+        referenceConfig.setConsumer(dubboConfigurationProperties.getConsumer());
+        referenceConfig.setTimeout(dubboConfigurationProperties.getConsumer().getTimeout());
+        referenceConfig.setGeneric(GENERIC);
+        referenceConfig.setAsync(Boolean.FALSE);
+        return cache.get(referenceConfig);
     }
 }
