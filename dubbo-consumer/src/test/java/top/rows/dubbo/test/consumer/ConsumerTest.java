@@ -26,26 +26,12 @@ import java.util.Objects;
 @RunWith(SpringRunner.class)
 public class ConsumerTest {
 
-    public static final String GENERIC = "true";
+    private static final String GENERIC = "true";
     @DubboReference
     private HelloService helloService;
 
     @Autowired
     private DubboConfigurationProperties dubboConfigurationProperties;
-
-
-    private ActivityParam param() {
-        return new ActivityParam()
-                .setActivityId(1L)
-                .setOrderNo("SS123123123123123123")
-                .setUserId(1L)
-                .setSkuKeyMap(
-                        Map.of(
-                                new ShopProductSkuKey().setShopId(2L).setProductId(2L).setSkuId(2L),
-                                10
-                        )
-                );
-    }
 
     /**
      * passed
@@ -57,7 +43,7 @@ public class ConsumerTest {
     }
 
     /**
-     * failed
+     * failed 泛化调用
      */
     @Test
     public void genericTest() {
@@ -70,6 +56,9 @@ public class ConsumerTest {
         System.out.println("success");
     }
 
+    /**
+     * dubbo GenericService getter
+     */
     public GenericService genericService(String interfaceName) {
         SimpleReferenceCache cache = SimpleReferenceCache.getCache();
         GenericService genericService = cache.get(interfaceName);
@@ -84,5 +73,21 @@ public class ConsumerTest {
         referenceConfig.setGeneric(GENERIC);
         referenceConfig.setAsync(Boolean.FALSE);
         return cache.get(referenceConfig);
+    }
+
+    /**
+     * mock 参数
+     */
+    private ActivityParam param() {
+        return new ActivityParam()
+                .setActivityId(1L)
+                .setOrderNo("SS123123123123123123")
+                .setUserId(1L)
+                .setSkuKeyMap(
+                        Map.of(
+                                new ShopProductSkuKey().setShopId(2L).setProductId(2L).setSkuId(2L),
+                                10
+                        )
+                );
     }
 }
