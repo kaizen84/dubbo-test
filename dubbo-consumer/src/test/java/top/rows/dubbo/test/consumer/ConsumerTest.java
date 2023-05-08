@@ -59,7 +59,7 @@ public class ConsumerTest {
     /**
      * dubbo GenericService getter
      */
-    public GenericService genericService(String interfaceName) {
+    private GenericService genericService(String interfaceName) {
         SimpleReferenceCache cache = SimpleReferenceCache.getCache();
         GenericService genericService = cache.get(interfaceName);
         if (genericService != null) {
