@@ -1,0 +1,36 @@
+server:
+  port: 8182
+dubbo:
+  application:
+    # 类检查模式 警告级别 仅禁止黑名单里的类
+    serialize-check-status: WARN
+    qos-enable: false
+    logger: slf4j
+    name: dubbo-provider
+  registry:
+    id: nacos-registry
+    address: nacos://xxxx
+    client: curator
+    simplified: true
+    parameters:
+      namespace: ccc-dubbo
+      group: DEFAULT_GROUP
+  protocol:
+    #fastjson2/hessian2/kryo
+    serialization: fastjson2
+    port: 18182
+    name: tri
+  consumer:
+    serialization: ${dubbo.protocol.serialization}
+    async: false
+    timeout: 12000
+    retries: 0
+    check: false
+    validation: true
+  provider:
+    serialization: ${dubbo.protocol.serialization}
+    prefer-serialization: ${dubbo.protocol.serialization}
+    async: false
+    timeout: 12000
+    validation: true
+    filter: -exception
